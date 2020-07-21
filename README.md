@@ -2,10 +2,10 @@
 ![](images/turtle.gif)
 
 ## Prerequisite:
-### Ubuntu 18.04
-### python/python3
-### RobotRaconteur
-### ROS Melodic
+* Ubuntu 18.04
+* python/python3
+* RobotRaconteur
+* ROS Melodic
 
 ## Examples:
 * turtle keyboard control
