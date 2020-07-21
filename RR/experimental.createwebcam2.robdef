@@ -1,0 +1,15 @@
+#Service to provide sample interface to webcams
+service experimental.createwebcam2
+
+stdver 0.9
+
+struct WebcamImage
+    field int32 width
+    field int32 height
+    field int32 step
+    field uint8[] data
+end
+
+object Webcam
+    property WebcamImage image
+end

@@ -1,0 +1,18 @@
+service experimental.turtlebot_create
+
+stdver 0.9
+
+struct pose
+    field double x
+    field double y
+    field double angle
+end
+
+
+object turtlesim
+	function void drive(double move_speed, double turn_speed)
+	function void setpose(pose turtle_pose)
+	wire pose turtle_pose_wire [readonly]
+	property string color
+
+end object
