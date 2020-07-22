@@ -10,3 +10,4 @@
 ## Examples:
 * turtle keyboard control
 * turtle webcam color control
+![](color_code.gif)
