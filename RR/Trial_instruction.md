@@ -87,4 +87,29 @@ To run this script, simply do `$ python streaming_client.py`.
 
 # Task:
 ## 1
-Given the example
+Given the example of `turtlebot.py` and `keyboard.py`, create a turtlebot service keeping track of the pose of the turtlebot, and a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly. The service definition is provided:
+```
+ 
+service experimental.turtlebot_create
+
+stdver 0.9
+
+struct pose
+    field double x
+    field double y
+    field double angle
+end
+
+
+object turtlesim
+	function void drive(double move_speed, double turn_speed)
+	function void setpose(pose turtle_pose)
+	wire pose turtle_pose_wire [readonly]
+	property string color
+
+end object
+```
+Feel free to modify it.
+
+## 2
+Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
