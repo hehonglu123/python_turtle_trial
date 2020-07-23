@@ -2,7 +2,7 @@
 Robot Raconteur is an object oriented Service-Client middleware. An RR service generally runs with a hardware (e.g. sensors,actuators) attached to a robot/computer to have direct communication between them. An RR client can receive messages that are sent from services and can call object functions in the service to command the robot. 
 In this example, we'll go through how RR webcam streaming works.
 # Service Definition
-Each RR services have a service definition file, which includes properties, functions and others that are exposed to clients. In other word, the definition inside the `.robdef` file are the ones the client has access to. 
+Each RR service has its own service definition file, which includes properties, functions and others that are exposed to clients. In other word, the definition inside the `.robdef` file are the ones the client has access to. 
 ## Webcam Example Service Definition
 Let's take a look at the webcam example service definition below:
 ```
