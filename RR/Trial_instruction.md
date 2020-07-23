@@ -158,7 +158,7 @@ WebcamImageToMat(cam.image)
 To run this script, simply do `$ python streaming_client.py`.
 
 ## Create Simple Turtlebot Client
-Now let's create an RR keyboard control client for the turtlebot. Create a new file and name it `turtlebot_client.py`. First import the RR and other essential libraries at top:
+Now let's create a simple RR client for the turtlebot. Create a new file and name it `turtlebot_client.py`. First import the RR and other essential libraries at top:
 ```
 from RobotRaconteur.Client import *     #import RR client library
 import turtle
