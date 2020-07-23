@@ -65,7 +65,7 @@ This line basically converts the `Image` type data into an openCV image object, 
 
 
 # Message Types
-Similar to RobotRaconteur service definition, for ROS there're [message types](http://wiki.ros.org/Messages) and [service types](http://wiki.ros.org/Services). In this example we only uses publisher/subscriber, so just messages types.
+Similar to RobotRaconteur service definition, for ROS there're [message types](http://wiki.ros.org/Messages) and [service types](http://wiki.ros.org/Services). In the task we'll need to create our own message and service types.
 When building ROS, many message and service types are built together, which you can look up online: http://wiki.ros.org/common_msgs. 
 In the task we'll ask to create your own message type `turtle_ros`:
 ```
@@ -79,7 +79,16 @@ Follow the instructions on http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv t
 You can include the message type in the similar way of ROS Image type:
 ```
 from python_turtle import turtle_ros
+from geometry_msgs import Pose
 ```
+And to create an object of that message type:
+```
+turtle_obj=turtle_ros()
+turtle_obj.name="myturtle"
+turtle_obj.turtle_pose=Pose()
+turtle_obj.color="red"
+```
+
 Remember to build your workspace and source it to get your message type exposed.
 
 # Service Types
