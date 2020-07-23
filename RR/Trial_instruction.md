@@ -109,7 +109,7 @@ object turtlesim
 
 end object
 ```
-Feel free to modify it.
+Create a file `experimental.turtlebot_create.robdef` under `python_turtle_trial/RR` and copy above text into the file as your service definition file. Feel free to modify it.
 
 ## 2
 Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
