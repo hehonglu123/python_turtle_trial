@@ -27,7 +27,7 @@ Under `~/python_turtle_trial/ROS/src/python_turtle/src/` there is a python scrip
 ``` 
 import rospy
 from sensor_msgs.msg import Image
-import ros_numpy
+from cv_bridge import CvBridge, CvBridgeError
 ```
 The `Webcam_impl()` class is a webcam class, which contains camera metadata and a `CaptureFrame()` function. Then take a look at `main`:
 ```
@@ -41,7 +41,7 @@ while not rospy.is_shutdown():
 This while loop holds the sciprt from exiting until ROS is shutdown, and inside the loop:
 ```
 frame=picam.CaptureFrame() 
-pub.publish(ros_numpy.msgify(Image,frame,encoding="bgr8")) 
+pub.publish(bridge.cv2_to_imgmsg(frame, "bgr8")) 
 ```
 The image is captured and convert to ROS Image type, and finally published to the topic by the publisher.
 To run this script, open a new terminal and run `roscore`. After that, you can run this script by `python cam_pub.py`.
@@ -59,9 +59,11 @@ rospy.spin()
 ROS node is intialized, and a subscriber `sub` is set up to subscribe to ROS topic `image_raw`, with `Image` type, triggering `callback()` function. `rospy.spin()` keeps this script running until user shutdown. Now let's take a look at the `callback()` function.
 `def callback(data)` means this function takes in an argument of `data`, which should be the message type specified in the subscriber setup (`Image`). 
 ```
-cv_image=ros_numpy.numpify(data)
-```
-This line basically converts the `Image` type data into an openCV image object, so that it could be displayed out on screen.
+try:
+	cv_image = bridge.imgmsg_to_cv2(data, "bgr8")	#convert ros image message to opencv object
+except CvBridgeError as e:
+	print(e)```
+Above lines basically convert the `Image` type data into an openCV image object, so that it could be displayed out on screen.
 
 
 # Message Types
