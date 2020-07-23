@@ -89,8 +89,8 @@ The service is registered with name "Webcam", type of "experimental.createwebcam
 The `input()` function at last holds the script from exiting. To run this script, simply do `$ python webcam_service.py`.
 
 
-## Create Turtlebot Client
-Now let's create an RR service for the turtlebot. First import the RR and other essential libraries at top:
+## Create Turtlebot Service
+Now let's create an RR service for the turtlebot. Create a new file and name it `turtlebot_service.py`. First import the RR and other essential libraries at top:
 ```
 import numpy as np
 import RobotRaconteur as RR
@@ -158,8 +158,49 @@ WebcamImageToMat(cam.image)
 To run this script, simply do `$ python streaming_client.py`.
 
 ## Create Keyboard Control Client
-Now let's create an RR keyboard control client for the turtlebot. 
+Now let's create an RR keyboard control client for the turtlebot. Create a new file and name it `turtlebot_client.py`. First import the RR and other essential libraries at top:
+```
+from RobotRaconteur.Client import *     #import RR client library
+import turtle
+```
+Similar to the `turtlebot.py`, we need to initialize the screen and a turtle first:
+```
+#display setup
+screen = turtle.Screen()
+screen.bgcolor("lightblue")
+#turtle setup
+t1=turtle.Turtle()
+t1.shape("turtle")
+```
+After that, it's necessary to have an `update` function to update the display:
+```
+def update(obj):                    	#Update the display
+        if obj.color=="None":		#update pen color on display
+            t1.penup()
+        else:
+            t1.pencolor(obj.color)
+
+	t1.setpos(obj.turtle_pose_wire.PeekInValue()[0].x,obj.turtle_pose_wire.PeekInValue()[0].y)
+	t1.seth(obj.turtle_pose_wire.PeekInValue()[0].angle)
+```
+Then comes the RR part, we intialize the RR client node and connect to the service:
+```
+with RR.ClientNodeSetup(argv=sys.argv):
+	url='rr+tcp://localhost:<port number>/?service=<service name>'
+	#take url from command line
+	if (len(sys.argv)>=2):
+		url=sys.argv[1]
+	turtle_obj=RRN.ConnectService(url)
+```
+A good example would be having the turtle driving a circle:
+```
+	while True:
+		turtle_obj.drive(10,10)
+		update()		#update in display
+```
+
 
 # Task
+From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `python_turtle_trial/Examples`, try adapt it into an RR client that can control the turtle through keyboard.
 
 Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
