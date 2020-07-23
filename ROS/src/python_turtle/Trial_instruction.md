@@ -62,7 +62,8 @@ ROS node is intialized, and a subscriber `sub` is set up to subscribe to ROS top
 try:
 	cv_image = bridge.imgmsg_to_cv2(data, "bgr8")	#convert ros image message to opencv object
 except CvBridgeError as e:
-	print(e)```
+	print(e)
+```
 Above lines basically convert the `Image` type data into an openCV image object, so that it could be displayed out on screen.
 
 
