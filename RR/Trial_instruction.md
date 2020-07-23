@@ -20,7 +20,7 @@ object Webcam
 end
 ```
 First there's a struct for `WebcamImage`, consisting of `width, height, step and data`. The first three elements are the metadata of an image, and the `data` contains the actual pixel information as an 1-D array.
-The object that being exposed to the network has the `object` keyword, and in this case it's the `Webcam`. The object in the example only has one member, a property of `WebcamImage` with name `image`.
+The object that being exposed to the network has the `object` keyword, and in this case it's the `Webcam`. The object in the example only has one member, a property of `WebcamImage` with name `image`. `Property` type is only one value type in RR, in the task below we'll introduce `wire` type, which is a good fit for constantly changing data.
 
 # RR Service:
 Inside `python_trials/RR`, there's `webcam_service.py` python script for RR webcam service. This example continuously capturing images from a webcam.
@@ -110,6 +110,9 @@ object turtlesim
 end object
 ```
 Create a file `experimental.turtlebot_create.robdef` under `python_turtle_trial/RR` and copy above text into the file as your service definition file. Feel free to modify it.
+
+To assign value to the `wire`, simply do `self.turtle_pose_wire.OutValue=pose` inside the `turtlesim` class, and `pose` here can be created the same way as `Image` example.
+To read the `wire` value, we can do `turtlesim.turtle_pose_wire.PeekInValue()[0]`.
 
 ## 2
 Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
