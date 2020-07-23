@@ -3,7 +3,7 @@
 
 ## Prerequisite:
 * Ubuntu 18.04
-* python/python3
+* python2
 * [RobotRaconteur](https://github.com/robotraconteur/robotraconteur/wiki/Download)
 * [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 
