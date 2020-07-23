@@ -90,7 +90,47 @@ The `input()` function at last holds the script from exiting. To run this script
 
 
 ## Create Turtlebot Client
-Now let's create an RR service for the turtlebot. 
+Now let's create an RR service for the turtlebot. First import the RR and other essential libraries at top:
+```
+import numpy as np
+import RobotRaconteur as RR
+RRN=RR.RobotRaconteurNode.s
+```
+Then create a class `create_turtle`, and fill in according to the service definition:
+```
+class create_turtle:
+	def __init__(self):               			#initialization upon creation
+		#RR property
+		self.turtle_pose=RRN.NewStructure("experimental.turtlebot_create.pose")	#create RR structure obj
+		self.color="None"
+	def drive(self,move_speed,turn_speed):            #Drive function, update new position, this is the one referred in definition
+		#assign those values
+		self.turtle_pose.x=<integrate speed>			
+		self.turtle_pose.y=<integrate speed>
+		self.turtle_pose.angle=<integrate speed>
+		#update wire value
+		self.turtle_pose_wire.OutValue=self.turtle_pose
+	def setpose(self,turtle_pose):			  #Setpose function, change the pose of turtle directly
+		self.turtle_pose=<update pose>
+		#update wire value
+		self.turtle_pose_wire.OutValue=self.turtle_pose
+```
+After creating the class object, it's necessary to intialize an RR node as well as registering the service like in *Webcam Example*:
+```
+with RR.ServerNodeSetup(<service definition name>, <port number>):      #setup RR node with service name and port
+	#Register the service type
+	RRN.RegisterServiceTypeFromFile(<service definition name>)               #register service type
+
+	create_inst=<create class object>                #create object
+
+	#Register the service with definition and object
+	RRN.RegisterService(<service name>,<service definition object>,<object to be passed>)
+
+	#Wait for program exit to quit
+	input("Press enter to quit")
+```
+	
+By filling in the sections above, an RR turtlebot service is ready to run!	
 
 # RR Client
 ## Webcam Example Streaming Client
