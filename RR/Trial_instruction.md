@@ -174,29 +174,40 @@ t1.shape("turtle")
 ```
 After that, it's necessary to have an `update` function to update the display:
 ```
-def update(obj):                    	#Update the display
-        if obj.color=="None":		#update pen color on display
+def update(turtle_obj,turtle_pose_wire):                    	#Update the display
+        if turtle_obj.color=="None":		#update pen color on display
             t1.penup()
         else:
-            t1.pencolor(obj.color)
+            t1.pencolor(turtle_obj.color)
 
-	t1.setpos(obj.turtle_pose_wire.PeekInValue()[0].x,obj.turtle_pose_wire.PeekInValue()[0].y)
-	t1.seth(obj.turtle_pose_wire.PeekInValue()[0].angle)
+	t1.setpos(turtle_pose_wire.InValue.x,turtle_pose_wire.InValue.y)
+	t1.seth(turtle_pose_wire.InValue.angle)
 ```
-Then comes the RR part, we intialize the RR client node and connect to the service:
+Then comes the RR part, we intialize the RR client node:
 ```
 with RR.ClientNodeSetup(argv=sys.argv):
 	url='rr+tcp://localhost:<port number>/?service=<service name>'
 	#take url from command line
 	if (len(sys.argv)>=2):
 		url=sys.argv[1]
-	turtle_obj=RRN.ConnectService(url)
 ```
+Since we have a `wire` in our service definition, it's better to use the subscriber mode here;
+```
+sub=RRN.SubscribeService(url)
+while True:	
+	try:								#keep looping if not connecting to a service
+		turtle_obj = sub.GetDefaultClient(url)			#turtle object sent from service
+		turtle_pose_wire=sub.SubscribeWire(<wire name>)		#subscribe to the wire name
+		break
+	except RR.ConnectionException:
+		time.sleep(0.1)
+```
+
 A good example would be having the turtle driving a circle:
 ```
 	while True:
 		turtle_obj.drive(10,10)
-		update()		#update in display
+		update(turtle_obj, turtle_pose_wire)		#update in display
 ```
 Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
