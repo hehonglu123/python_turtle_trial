@@ -149,29 +149,6 @@ $ echo 'source ~/python_turtle_trial/ROS/devel/setup.bash' >> ~/.bashrc
 ```
 This step adds the command everytime you open up a new terminal. If errors like something not found or not built, try `source ~/python_turtle_trial/ROS/devel/setup.bash` to source the workspace directly.
 
-
-# ROS Subscriber
-
-## Webcam Example
-On your computer side, under `~/python_turtle_trial/ROS/src/webcam/src/` there is a python script called `cam_sub.py`. We include ROS library and message types at the top.
-Unlike a publisher, a subscriber subscribe to the topic, and trigger the `callback()` function. Inside main, 
-```
-rospy.init_node('stream_node', anonymous=True)
-sub = rospy.Subscriber("image_raw",Image,callback)
-rospy.spin()
-```
-ROS node is intialized, and a subscriber `sub` is set up to subscribe to ROS topic `image_raw`, with `Image` type, triggering `callback()` function. `rospy.spin()` keeps this script running until user shutdown. Now let's take a look at the `callback()` function.
-`def callback(data)` means this function takes in an argument of `data`, which should be the message type specified in the subscriber setup (`Image`). 
-```
-try:
-	cv_image = bridge.imgmsg_to_cv2(data, "bgr8")	#convert ros image message to opencv object
-except CvBridgeError as e:
-	print(e)
-```
-Above lines basically convert the `Image` type data into an openCV image object, so that it could be displayed out on screen.
-
-## Create Turtlebot Subscriber
-
 # ROS Publisher
 Under `~/python_turtle_trial/ROS/src/webcam/src/` there is a python script called `cam_pub.py`. At the very top, we include ROS library and message types:
 ``` 
@@ -198,8 +175,134 @@ To run this script, open a new terminal and run `roscore`. After that, you can r
 For every ROS communication, there needs to be one and only one roscore running. To check if the images are successfully published or not, open up a new terminal and type in `rostopic echo image_raw`.
 This way the terminal shall display the image data.
 
-## Create Turtlebot Publisher
+# ROS Subscriber
 
+On your computer side, under `~/python_turtle_trial/ROS/src/webcam/src/` there is a python script called `cam_sub.py`. We include ROS library and message types at the top.
+Unlike a publisher, a subscriber subscribe to the topic, and trigger the `callback()` function. Inside main, 
+```
+rospy.init_node('stream_node', anonymous=True)
+sub = rospy.Subscriber("image_raw",Image,callback)
+rospy.spin()
+```
+ROS node is intialized, and a subscriber `sub` is set up to subscribe to ROS topic `image_raw`, with `Image` type, triggering `callback()` function. `rospy.spin()` keeps this script running until user shutdown. Now let's take a look at the `callback()` function.
+`def callback(data)` means this function takes in an argument of `data`, which should be the message type specified in the subscriber setup (`Image`). 
+```
+try:
+	cv_image = bridge.imgmsg_to_cv2(data, "bgr8")	#convert ros image message to opencv object
+except CvBridgeError as e:
+	print(e)
+```
+Above lines basically convert the `Image` type data into an openCV image object, so that it could be displayed out on screen.
+
+
+
+
+## Create Turtlebot Server
+All script about turtles should be in `~/python_turtle_trial/ROS/src/python_turtle/src/` directory, so let's create a file named `turtlebot_service.py`. The function of this script is to keep track of the turtle (pose and color).
+First, it's necessary to include ROS and relative libraries and messages:
+```
+import time
+import rospy
+import numpy as np
+from geometry_msgs.msg import Twist, Pose
+from python_turtle.msg import turtle_msg
+from python_turtle.srv import setcolor, setpose
+```
+Here `Twist` and `Pose` messages are two standard ones in [geometry messages](http://wiki.ros.org/geometry_msgs), and `turtle_msg` is the one we created earlier.
+Then let's also create a python class object called `create_turtle`, and initialize ROS publisher, subscriber and services:
+```
+class create_turtle:
+	def __init__(self):               			#initialization upon creation
+		#message type initialziation
+		self.turtle_pose=Pose()
+		self.turtle=turtle_msg()
+		#subscriber initialization
+		self.vel_sub=rospy.Subscriber(<drive topic name>,<message type>,self.drive_callback)
+		#publisher initialization
+		self.pose_pub=rospy.Publisher(<turtle topic name>,<message type>,queue_size=1)
+		#service initialization
+		self.pose_server=rospy.Service(<service name>, <service type>, self.set_pose)
+		self.color_server=rospy.Service(<service name>, <service type>, self.set_color)
+```
+Note that in the service there're function `drive_callback`, `set_pose` and `set_color`, therefore we'll also need to implement those so when a service is called or a subscriber receives message, the function will be triggered. Inside the same class,
+```
+	def drive_callback(self,data):            #Drive function, update new position, this is the one referred in definition
+		self.turtle.turtle_pose.position.x=<decode message type and update pose>
+		self.turtle.turtle_pose.position.y=<decode message type and update pose>
+		self.turtle.turtle_pose.orientation.z=<decode message type and update pose>
+
+	def set_pose(self,req):		#update pose based on given pose
+		self.turtle.turtle_pose=req.turtle_pose.pose
+		return 1
+	def set_color(self,req):	#set color based on given color
+		self.turtle.color=req.color
+		return 1
+```
+After having a complete class, it's necessary to initialize a ROS node as well as create the class object:
+```
+rospy.init_node('turtlebot', anonymous=True)
+turtle_obj=create_turtle()
+```
+Note that the goal for this script is to keep track of the turtle, so we also need to publish the turtle pose continuously.
+```
+while not rospy.is_shutdown():
+	turtle_obj.pose_pub.publish(turtle_obj.turtle)
+	time.sleep(0.01)
+```
+By filling up the `<>` sections above, you should have a complete turtlebot server.
+
+## Create Turtlebot Client
+Now let's create a simple ROS client for the turtlebot. Create a new file and name it `turtlebot_client.py`. First import the ROS and other essential libraries at top:
+```
+import rospy     #import ROS library
+import turtle as tt
+from geometry_msgs.msg import TwistStamped
+from python_turtle.msg import turtle_msg
+```
+Similar to the `turtlebot.py`, we need to initialize the screen and a turtle first:
+```
+#display setup
+screen = turtle.Screen()
+screen.bgcolor("lightblue")
+#turtle setup
+t1=turtle.Turtle()
+t1.shape("turtle")
+```
+Then it's necessary to create a variable keeping the turtle pose information from ROS subscriber callback:
+```
+turtle_obj=turtle_msg()
+def callback(data):
+	global turtle_obj
+	turtle_pose=data
+```
+And it's also necessary to have an `update()` function to update display:
+```
+def update()
+	global turtle_obj
+	if turtle_obj.color=="None":
+		t1.penup()
+	else:
+		t1.pencolor(<color>)
+
+	t1.setpos(<x coordinate>,<y coordinate>)
+	t1.seth(<angle>)
+```
+Finally, we initialize ROS node as well as the publisher and subscriber:
+```
+rospy.init_node(<random node name>, anonymous=False)
+pub=rospy.Publisher(<drive topic name>,<message type>,queue_size=1)
+sub=rospy.Subscriber(<turtle topic name>,<message type>,callback)
+```
+After ROS is initialized, let's also have the turtle running a circle:
+```
+while not rospy.is_shutdown():
+        update()
+	msg=Twist()	#create message object
+	msg.linear.x=10
+	msg.angular.z=10
+	pub.publish(msg)  
+```
+All rospy scripts can run with `python` command, but make sure have one and only one `roscore` running.
 
 # Task
 From tutorial above, you should have a complete turtlebot subscriber and a simple turtlebot publisher. Given `keyboard.py` under `python_turtle_trial/Examples`, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
