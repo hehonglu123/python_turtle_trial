@@ -1,4 +1,6 @@
 import termios, fcntl, sys, os
+#TODO: import RR/ROS libraries and ROS message/service type 
+
 
 #keyboard reading settings
 fd = sys.stdin.fileno()
@@ -9,14 +11,22 @@ termios.tcsetattr(fd, termios.TCSANOW, newattr)
 oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
 fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
+#TODO: Initialize ROS/RR node
+#ROS: create publisher to publish Twist message to corresponding topic name
+
+#RR: connect to service with url
+
 print("Running")
 print("Press Arrow Key to Control Turtle")
 print("Press q to quit")
 try:
+    #TODO: hold the script running with ROS/RR way
     while True:
         try:
             #read input and print "command"
             c = sys.stdin.read()
+            #TODO: ROS create message type variable, publish command
+            #TODO: RR call drive function
             if "\x1b[A" in c:
                 print("drive forward")          ####Drive forward
             if "\x1b[B" in c:

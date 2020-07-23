@@ -1,8 +1,5 @@
-import turtle
 import time
 import numpy as np
-import traceback
-import copy
 #import ROS library
 import rospy
 from std_msgs.msg import Int8

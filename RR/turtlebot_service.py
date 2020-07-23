@@ -1,8 +1,4 @@
-import turtle
-import time
 import numpy as np
-import traceback
-import copy
 #import RR library
 import RobotRaconteur as RR
 RRN=RR.RobotRaconteurNode.s
