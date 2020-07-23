@@ -134,7 +134,7 @@ By filling in the sections above, an RR turtlebot service is ready to run!
 
 # RR Client
 ## Webcam Example Streaming Client
-There's script `streaming_client.py` under `python_trials/RR`. The RR client library is imported at the top:
+There's script `streaming_client.py` under `python_turtle_trial/RR`. The RR client library is imported at the top:
 ```
 from RobotRaconteur.Client import *
 ```
