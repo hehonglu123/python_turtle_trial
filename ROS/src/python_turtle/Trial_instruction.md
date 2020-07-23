@@ -18,12 +18,12 @@ catkin_make
 ```
 It should finish without errors, and generating `/build` and `/devel` folders under the same directory. However, to make sure your code knows what you've built, we need to source it:
 ```
-$ echo 'source ~/pihat_trials/ROS/devel/setup.bash' >> ~/.bashrc 
+$ echo 'source ~/python_turtle_trial/ROS/devel/setup.bash' >> ~/.bashrc 
 ```
-Finish above steps on both pi and laptop. If errors like something not found or not built, try `source ~/pihat_trials/ROS/devel/setup.bash`.
+This step adds the command everytime you open up a new terminal. If errors like something not found or not built, try `source ~/python_turtle_trial/ROS/devel/setup.bash` to source the workspace directly.
 
 # ROS Publisher
-On Pi side, under `~/pihat_trials/ROS/src/trials/src/` there is a python script called `cam_pub.py`. At the very top, we include ROS library and message types:
+Under `~/python_turtle_trial/ROS/src/python_turtle/src/` there is a python script called `cam_pub.py`. At the very top, we include ROS library and message types:
 ``` 
 import rospy
 from sensor_msgs.msg import Image
@@ -49,7 +49,7 @@ For every ROS communication, there needs to be one and only one roscore running.
 This way the terminal shall display the image data.
 
 # ROS Subscriber
-On your computer side, under `~/pihat_trials/ROS/src/trials/src/` there is a python script called `cam_sub.py`. Similarly, we include ROS library and message types at the top.
+On your computer side, under `~/python_turtle_trial/ROS/src/python_turtle/src/` there is a python script called `cam_sub.py`. Similarly, we include ROS library and message types at the top.
 Unlike a publisher, a subscriber subscribe to the topic, and trigger the `callback()` function. Inside main, 
 ```
 rospy.init_node('stream_node', anonymous=True)
