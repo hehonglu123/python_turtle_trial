@@ -1,8 +1,8 @@
 # Robot Raconteur Survey
-Robot Raconteur is an object oriented Service-Client middleware. An RR service generally runs with a hardware (e.g. sensors,actuators) attached to a robot/computer to have direct communication between them. An RR client can receive messages that are sent from services and can call object functions in the service to command the robot. In this survey, we’ll first demonstrate how RR works with virtual duckiebot keyboard control.
+Robot Raconteur is an object oriented Service-Client middleware. An RR service generally runs with a hardware (e.g. sensors,actuators) attached to a robot/computer to have direct communication between them. An RR client can receive messages that are sent from services and can call object functions in the service to command the robot. 
 In this example, we'll go through how RR webcam streaming works.
 # Service Definition:
-Each RR services have a service definition file, which includes properties, functions and others that are exposed to clients. In other word, the definition inside the `.robdef` file are the ones the client has access to. 
+Each RR services have a service definition file, which includes properties, functions and others that are exposed to clients. In other word, the definition inside the `.robdef` file are the ones the client has access to. Let's take a look at the webcam example service definition below:
 ```
 service experimental.createwebcam2
 
@@ -22,8 +22,31 @@ end
 First there's a struct for `WebcamImage`, consisting of `width, height, step and data`. The first three elements are the metadata of an image, and the `data` contains the actual pixel information as an 1-D array.
 The object that being exposed to the network has the `object` keyword, and in this case it's the `Webcam`. The object in the example only has one member, a property of `WebcamImage` with name `image`. `Property` type is only one value type in RR, in the task below we'll introduce `wire` type, which is a good fit for constantly changing data.
 
+Now let's try create the service definition for a turtlebot:
+```
+service experimental.turtlebot_create
+
+stdver 0.9
+
+struct pose
+    field double x
+    field double y
+    field double angle
+end
+
+
+object turtlesim
+	function void drive(double move_speed, double turn_speed)
+	function void setpose(pose turtle_pose)
+	wire pose turtle_pose_wire [readonly]
+	property string color
+
+end object
+```
+With provided service definition above, create a file `experimental.turtlebot_create.robdef` under `python_turtle_trial/RR` and copy them into the file as your service definition file. Feel free to modify it. This service definition will give you a sense on what object information to contain in your RR service later.
+
 # RR Service:
-Inside `python_trials/RR`, there's `webcam_service.py` python script for RR webcam service. This example continuously capturing images from a webcam.
+Inside `python_turtle_trial/RR`, there's `webcam_service.py` python script for RR webcam service. This example continuously capturing images from a webcam.
 At very top, the RobotRaconteur library is imported:
 ```
 import RobotRaconteur as RR
@@ -61,6 +84,8 @@ The service is registered with name "Webcam", type of "experimental.createwebcam
 
 The `input()` function at last holds the script from exiting. To run this script, simply do `$ python webcam_service.py`.
 
+
+
 # RR Client:
 On your laptop side, there's script `streaming_client.py` under `python_trials/RR`. The RR client library is imported at the top:
 ```
@@ -85,34 +110,8 @@ WebcamImageToMat(cam.image)
 ```
 To run this script, simply do `$ python streaming_client.py`.
 
+Now let's create an RR keyboard control client for the turtlebot. 
+
 # Task:
-## 1
-Given the example of `turtlebot.py` and `keyboard.py`, create a turtlebot service keeping track of the pose of the turtlebot, and a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly. The service definition is provided:
-```
- 
-service experimental.turtlebot_create
 
-stdver 0.9
-
-struct pose
-    field double x
-    field double y
-    field double angle
-end
-
-
-object turtlesim
-	function void drive(double move_speed, double turn_speed)
-	function void setpose(pose turtle_pose)
-	wire pose turtle_pose_wire [readonly]
-	property string color
-
-end object
-```
-Create a file `experimental.turtlebot_create.robdef` under `python_turtle_trial/RR` and copy above text into the file as your service definition file. Feel free to modify it.
-
-To assign value to the `wire`, simply do `self.turtle_pose_wire.OutValue=pose` inside the `turtlesim` class, and `pose` here can be created the same way as `Image` example.
-To read the `wire` value, we can do `turtlesim.turtle_pose_wire.PeekInValue()[0]`.
-
-## 2
 Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
