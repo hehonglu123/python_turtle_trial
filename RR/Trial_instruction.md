@@ -24,7 +24,7 @@ end
 First there's a struct for `WebcamImage`, consisting of `width, height, step and data`. The first three elements are the metadata of an image, and the `data` contains the actual pixel information as an 1-D array.
 The object that being exposed to the network has the `object` keyword, and in this case it's the `Webcam`. The object in the example only has one member, a property of `WebcamImage` with name `image`. `Property` type is only one value type in RR, in the task below we'll introduce `wire` type, which is a good fit for constantly changing data.
 
-## Turtlebot Service Definition
+## Create Turtlebot Service Definition
 Now let's try create the service definition for a turtlebot:
 ```
 service experimental.turtlebot_create
@@ -89,6 +89,8 @@ The service is registered with name "Webcam", type of "experimental.createwebcam
 The `input()` function at last holds the script from exiting. To run this script, simply do `$ python webcam_service.py`.
 
 
+## Create Turtlebot Client
+Now let's create an RR service for the turtlebot. 
 
 # RR Client
 ## Webcam Example Streaming Client
@@ -115,6 +117,7 @@ WebcamImageToMat(cam.image)
 ```
 To run this script, simply do `$ python streaming_client.py`.
 
+## Create Keyboard Control Client
 Now let's create an RR keyboard control client for the turtlebot. 
 
 # Task
