@@ -130,7 +130,7 @@ with RR.ServerNodeSetup(<service definition name>, <port number>):      #setup R
 	input("Press enter to quit")
 ```
 	
-By filling in the sections above, an RR turtlebot service is ready to run!	
+By filling in the sections above, an RR turtlebot service is ready to run by `python turtlebot_service.py`!
 
 # RR Client
 ## Webcam Example Streaming Client
@@ -198,7 +198,7 @@ A good example would be having the turtle driving a circle:
 		turtle_obj.drive(10,10)
 		update()		#update in display
 ```
-
+Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
 # Task
 From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `python_turtle_trial/Examples`, try adapt it into an RR client that can control the turtle through keyboard.
