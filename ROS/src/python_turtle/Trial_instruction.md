@@ -2,9 +2,9 @@
 The structure of ROS is a little different from Robot Raconteur. It has the Publisher-Subscriber relationship between different nodes.
 
 # Setup
-## catkin workspace
+## Catkin Workspace
 For each ROS project there's a catkin workspace dedicated, and in this trial the workspace is `python_turtle_trial/ROS`.
-## package
+## Package
 Unlike RobotRaconteur, ROS requires the workspace to build the content. All packages should be in `workspace/src/` folder. In this repository there's already a webcam package, so you'll need to [create another package](http://wiki.ros.org/ROS/Tutorials/CreatingPackage) for python turtle:
 ```
 cd ~/python_turtle_trial/ROS
@@ -151,7 +151,9 @@ This step adds the command everytime you open up a new terminal. If errors like 
 
 
 # ROS Subscriber
-On your computer side, under `~/python_turtle_trial/ROS/src/python_turtle/src/` there is a python script called `cam_sub.py`. Similarly, we include ROS library and message types at the top.
+
+## Webcam Example
+On your computer side, under `~/python_turtle_trial/ROS/src/webcam/src/` there is a python script called `cam_sub.py`. We include ROS library and message types at the top.
 Unlike a publisher, a subscriber subscribe to the topic, and trigger the `callback()` function. Inside main, 
 ```
 rospy.init_node('stream_node', anonymous=True)
@@ -168,10 +170,10 @@ except CvBridgeError as e:
 ```
 Above lines basically convert the `Image` type data into an openCV image object, so that it could be displayed out on screen.
 
-
+## Create Turtlebot Subscriber
 
 # ROS Publisher
-Under `~/python_turtle_trial/ROS/src/python_turtle/src/` there is a python script called `cam_pub.py`. At the very top, we include ROS library and message types:
+Under `~/python_turtle_trial/ROS/src/webcam/src/` there is a python script called `cam_pub.py`. At the very top, we include ROS library and message types:
 ``` 
 import rospy
 from sensor_msgs.msg import Image
@@ -196,14 +198,11 @@ To run this script, open a new terminal and run `roscore`. After that, you can r
 For every ROS communication, there needs to be one and only one roscore running. To check if the images are successfully published or not, open up a new terminal and type in `rostopic echo image_raw`.
 This way the terminal shall display the image data.
 
-
+## Create Turtlebot Publisher
 
 
 # Task
-## 1
-Given the example of `turtlebot.py` and `keyboard.py`, create a turtlebot server keeping track of the pose of the turtlebot. The message and service types are already provided, and make sure to build your workspace and source it everytime there's a change in service or message. 
+From tutorial above, you should have a complete turtlebot subscriber and a simple turtlebot publisher. Given `keyboard.py` under `python_turtle_trial/Examples`, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
 
-If the server runs without any error, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
 
-## 2
 Given the camera publisher `ROS/cam_pub.py` and detection example `Examples/detection.py`, try create a client subscribing images from the webcam, process the image and publishing command to drive the turtle based on the color detected in your webcam.
