@@ -105,8 +105,8 @@ self.pose_server=rospy.Service('setpose', setpose, self.set_pose)
 and the function is provided later in the same class:
 ```
 def set_pose(self,req):
-		self.turtle.turtle_pose=req.turtle_pose.pose
-		return 1
+	self.turtle.turtle_pose=req.turtle_pose.pose
+	return 1
 ```
 Remember to build your workspace and source it to get your service types exposed.
 
@@ -115,3 +115,6 @@ Remember to build your workspace and source it to get your service types exposed
 Given the example of `turtlebot.py` and `keyboard.py`, create a turtlebot server keeping track of the pose of the turtlebot. The message and service types are already provided, and make sure to build your workspace and source it everytime there's a change in service or message. 
 
 If the server runs without any error, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
+
+## 2
+Given the camera publisher `ROS/cam_pub.py` and detection example `Examples/detection.py`, try create a client subscribing images from the webcam, process the image and publishing command to drive the turtle based on the color detected in your webcam.
