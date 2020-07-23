@@ -67,7 +67,7 @@ This line basically converts the `Image` type data into an openCV image object, 
 # Message Types
 Similar to RobotRaconteur service definition, for ROS there're [message types](http://wiki.ros.org/Messages) and [service types](http://wiki.ros.org/Services). In this example we only uses publisher/subscriber, so just messages types.
 When building ROS, many message and service types are built together, which you can look up online: http://wiki.ros.org/common_msgs. 
-In the task we'll ask to create your own message type `turtle`:
+In the task we'll ask to create your own message type `turtle_ros`:
 ```
 string name
 geometry_msgs/Pose turtle_pose
@@ -76,6 +76,42 @@ string color
 This bascially shows the message contains the name of the turtle, its pose and color.
 Follow the instructions on http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv to create this message.
 
-# Service Types
-A ROS service is similar to a function call, and in the task we'll ask you to create a `setpose` and `setcolor`
+You can include the message type in the similar way of ROS Image type:
+```
+from python_turtle import turtle_ros
+```
+Remember to build your workspace and source it to get your message type exposed.
 
+# Service Types
+A ROS service is similar to a function call, and in the task we'll ask you to create a `setpose` and `setcolor`:
+`setpose`:
+```
+geometry_msgs/PoseStamped turtle_pose
+---
+int8 ret
+```
+`setcolor`:
+```
+string color
+---
+int8 ret
+```
+ROS service has to have a return type, so we can simply return an `int` instead of `void`. Follow the instructions on http://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv to create the services.
+
+To set up a service, it's necessary to initialize it first:
+```
+self.pose_server=rospy.Service('setpose', setpose, self.set_pose)
+```
+and the function is provided later in the same class:
+```
+def set_pose(self,req):
+		self.turtle.turtle_pose=req.turtle_pose.pose
+		return 1
+```
+Remember to build your workspace and source it to get your service types exposed.
+
+# Task
+## 1
+Given the example of `turtlebot.py` and `keyboard.py`, create a turtlebot server keeping track of the pose of the turtlebot. The message and service types are already provided, and make sure to build your workspace and source it everytime there's a change in service or message. 
+
+If the server runs without any error, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
