@@ -32,7 +32,7 @@ python turtlebot_service.py
 While the service keeps track of the turtle, the client can control the turtle, as well as display the turtle on screen. The **python turtle** module is on client side.
 ### Keyboard Control:
 ```
-python turtlebot_keyboard.py
+python client_keyboard.py
 ```
 It should bring up a window with a turtle at center, and simply press the arrow key on your keyboard in the terminal to control the turtle.
 
@@ -53,6 +53,6 @@ python turtlebot_service.py
 ```
 To start the final client:
 ```
-python client_colorcode.py
+python client_color.py
 ```
 Point the camera toward red/green/blue objects to drive the turtle.
