@@ -212,6 +212,7 @@ while True:
 Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
 # Task
-From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `~/python_turtle_trial/Examples`, try adapt it into an RR client that can control the turtle through keyboard.
-
-Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
+## 1
+From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `~/python_turtle_trial/Examples`, copy it to `~/python_turtle_trial/RR` and try adapting it into an RR client that can control the turtle through keyboard.
+## 2
+Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam as well as setting the color of the turtle to color detected.
