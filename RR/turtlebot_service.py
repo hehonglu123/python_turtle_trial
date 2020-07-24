@@ -26,7 +26,7 @@ if __name__ == '__main__':
 	with RR.ServerNodeSetup("experimental.turtlebot_create", 22222):      #setup RR node with service name and port
 		#Register the service type
 
-		RRN.RegisterServiceTypeFromFile("experimental.turtlebot_create")               #register service type
+		RRN.RegisterServiceTypeFromFile("robdef/experimental.turtlebot_create")               #register service type
 
 		create_inst=create_impl()                #create object
 

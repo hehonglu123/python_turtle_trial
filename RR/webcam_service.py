@@ -53,7 +53,7 @@ def main():
 
         #Initialize the webcam host root object
         
-        RRN.RegisterServiceTypeFromFile("experimental.createwebcam2")
+        RRN.RegisterServiceTypeFromFile("robdef/experimental.createwebcam2")
         #create object
         c1=Webcam_impl()
         #register service with service name "Webcam", type "experimental.createwebcam2.Webcam", actual object: c1
