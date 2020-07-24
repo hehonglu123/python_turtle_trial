@@ -219,12 +219,12 @@ class create_turtle:
 		self.turtle_pose=Pose()
 		self.turtle=turtle_msg()
 		#subscriber initialization
-		self.vel_sub=rospy.Subscriber(<drive topic name>,<message type>,self.drive_callback)
+		self.vel_sub=rospy.Subscriber('<drive topic name>',<message type>,self.drive_callback)
 		#publisher initialization
-		self.turtle_pub=rospy.Publisher(<turtle topic name>,<message type>,queue_size=1)
+		self.turtle_pub=rospy.Publisher('<turtle topic name>',<message type>,queue_size=1)
 		#service initialization
-		self.pose_server=rospy.Service(<service name>, <service type>, self.set_pose)
-		self.color_server=rospy.Service(<service name>, <service type>, self.set_color)
+		self.pose_server=rospy.Service('<service name>', <service type>, self.set_pose)
+		self.color_server=rospy.Service('<service name>', <service type>, self.set_color)
 ```
 Note that in the service there're function `drive_callback`, `set_pose` and `set_color`, therefore we'll also need to implement those so when a service is called or a subscriber receives message, the function will be triggered. Inside the same class,
 ```
@@ -242,7 +242,7 @@ Note that in the service there're function `drive_callback`, `set_pose` and `set
 ```
 After having a complete class, it's necessary to initialize a ROS node as well as create the class object:
 ```
-rospy.init_node(<random node name>, anonymous=True)
+rospy.init_node('<random node name>', anonymous=True)
 turtle_obj=create_turtle()
 ```
 Note that the goal for this script is to keep track of the turtle, so we also need to publish the turtle pose continuously.
@@ -284,16 +284,16 @@ def update()
 	if turtle_obj.color=="None":
 		t1.penup()
 	else:
-		t1.pencolor(<color>)
+		t1.pencolor('<color>')
 
 	t1.setpos(<x coordinate>,<y coordinate>)
 	t1.seth(<angle>)
 ```
 Finally, we initialize ROS node as well as the publisher and subscriber:
 ```
-rospy.init_node(<random node name>, anonymous=False)
-pub=rospy.Publisher(<drive topic name>,<message type>,queue_size=1)
-sub=rospy.Subscriber(<turtle topic name>,<message type>,callback)
+rospy.init_node('<random node name>', anonymous=False)
+pub=rospy.Publisher('<drive topic name>',<message type>,queue_size=1)
+sub=rospy.Subscriber('<turtle topic name>',<message type>,callback)
 ```
 After ROS is initialized, let's also have the turtle running a circle:
 ```
