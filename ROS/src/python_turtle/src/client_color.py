@@ -1,21 +1,19 @@
-import turtle as tt
-import traceback
+import turtle
 import cv2
 import time
 import numpy as np
-import rospy		#import ROS client library
-from python_turtle.msg import turtle
+import rospy		#import ROS library
+from python_turtle.msg import turtle_msg
 from python_turtle.srv import setcolor
-from std_msgs.msg import Int8
-from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
 
 #display setup
-screen = tt.Screen()
+screen = turtle.Screen()
 screen.bgcolor("lightblue")
-t1=tt.Turtle()
+t1=turtle.Turtle()
 t1.shape("turtle")
 #ROS initialization
 rospy.init_node('client_color', anonymous=False)
@@ -24,8 +22,8 @@ rospy.wait_for_service('setcolor')
 set_color=rospy.ServiceProxy('setcolor',setcolor)
 ret=set_color("red")
 #vel publisher
-pub=rospy.Publisher('drive',TwistStamped,queue_size=1)
-turtle_obj=turtle()
+pub=rospy.Publisher('drive',Twist,queue_size=1)
+turtle_obj=turtle_msg()
 
 def callback(data):
 	global turtle_obj
@@ -47,7 +45,7 @@ def image_callback(data):
 	image_size=data.width*data.height
 	image_dimension=np.array([data.height,data.width])
 
-	msg=TwistStamped()
+	msg=Twist()
 
 	# 1) filter on RED component
 	image_red = cv2.inRange(image, np.array([5,5,200]),np.array([200,200,255]))
@@ -57,7 +55,7 @@ def image_callback(data):
 	for i in idx:
 		if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
 			print("red detected")
-			msg.twist.linear.x=10
+			msg.linear.x=10
 			pub.publish(msg)
 			return
 
@@ -69,7 +67,7 @@ def image_callback(data):
 	for i in idx:
 		if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
 			print("green detected")
-			msg.twist.angular.z=-10
+			msg.angular.z=-10
 			pub.publish(msg)
 			return
 
@@ -81,12 +79,9 @@ def image_callback(data):
 	for i in idx:
 		if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
 			print("blue detected")
-			msg.twist.angular.z=10
+			msg.angular.z=10
 			pub.publish(msg)
 			return
-
-
-
 
 def updatepose():                    #set a new pose for turtlebot
 	global turtle_obj
@@ -99,16 +94,13 @@ def updatepose():                    #set a new pose for turtlebot
 	t1.seth(turtle_obj.turtle_pose.orientation.z)
 
 
-sub=rospy.Subscriber('turtle',turtle,callback)
+sub=rospy.Subscriber('turtle',turtle_msg,callback)
 image_sub=rospy.Subscriber("image_raw",Image,image_callback, queue_size = 1,buff_size=2**24)
 
 
 while not rospy.is_shutdown():
-	try:
-		updatepose()							#updatepose based on location of each turtle
-		time.sleep(0.01)
-	except:
-		traceback.print_exc()
-		break
+	updatepose()							#updatepose based on location of each turtle
+	time.sleep(0.01)
+
 
 

@@ -1,11 +1,11 @@
 import termios, fcntl, sys, os
 import rospy     #import ROS library
-import turtle as tt
-from geometry_msgs.msg import TwistStamped
-from python_turtle.msg import turtle
+import turtle
+from geometry_msgs.msg import Twist
+from python_turtle.msg import turtle_msg
 
 
-turtle_obj=turtle()
+turtle_obj=turtle_msg()
 def callback(data):
     global turtle_obj
     turtle_obj=data
@@ -22,9 +22,9 @@ oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
 fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
 #display setup
-screen = tt.Screen()
+screen = turtle.Screen()
 screen.bgcolor("lightblue")
-t1=tt.Turtle()
+t1=turtle.Turtle()
 t1.shape("turtle")
 
 def updatepose():                    #set a new pose for turtlebot
@@ -39,8 +39,8 @@ def updatepose():                    #set a new pose for turtlebot
 
 #ROS initialization
 rospy.init_node('keyboard_control', anonymous=False)
-pub=rospy.Publisher('drive',TwistStamped,queue_size=1)
-sub=rospy.Subscriber('turtle',turtle,callback)
+pub=rospy.Publisher('drive',Twist,queue_size=1)
+sub=rospy.Subscriber('turtle',turtle_msg,callback)
 
 
 
@@ -53,16 +53,16 @@ try:
             #update turtle pose on screen
             updatepose() 
             #form ros msg
-            msg=TwistStamped()
+            msg=Twist()
             c = sys.stdin.read()
             if "\x1b[A" in c:
-                msg.twist.linear.x=10                   ####Drive forward
+                msg.linear.x=10                   ####Drive forward
             if "\x1b[B" in c:
-                msg.twist.linear.x=-10                  ####Drive backward               
+                msg.linear.x=-10                  ####Drive backward               
             if "\x1b[C" in c:
-                msg.twist.angular.z=-10                 ####Drive right
+                msg.angular.z=-10                 ####Drive right
             if "\x1b[D" in c:
-                msg.twist.angular.z=10                  ####Drive left
+                msg.angular.z=10                  ####Drive left
             if "q" in c:
                 break
             pub.publish(msg)     
