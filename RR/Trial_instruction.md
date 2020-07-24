@@ -201,7 +201,7 @@ Since we have a `wire` in our service definition, it's better to use the subscri
 			break
 		except RR.ConnectionException:
 			time.sleep(0.1)
-	```
+```
 
 A good example would be having the turtle driving a circle:
 ```
