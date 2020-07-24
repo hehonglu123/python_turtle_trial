@@ -3,14 +3,14 @@ The structure of ROS is a little different from Robot Raconteur. It has the Publ
 
 # Setup
 ## Catkin Workspace
-For each ROS project there's a catkin workspace dedicated, and in this trial the workspace is `python_turtle_trial/ROS`.
+For each ROS project there's a dedicated catkin workspace, and in this trial the workspace is `~/python_turtle_trial/ROS` already created in the repo.
 ## Package
-Unlike RobotRaconteur, ROS requires the workspace to build the content. All packages should be in `workspace/src/` folder. In this repository there's already a webcam package, so you'll need to [create another package](http://wiki.ros.org/ROS/Tutorials/CreatingPackage) for python turtle:
+Unlike RobotRaconteur, ROS requires the workspace to build the content. All packages should be in `workspace/src/` folder. In this repository there's already a webcam package (`~/python_turtle_trial/ROS/src/webcam/`), so you'll need to [create another package](http://wiki.ros.org/ROS/Tutorials/CreatingPackage) for python turtle:
 ```
 cd ~/python_turtle_trial/ROS
 catkin_create_pkg python_turtle std_msgs geometry_msgs rospy
 ```
-This creates a new package under `cd ~/python_turtle_trial/ROS/src`, with dependency of `std_msgs`, `geometry_msgs` and `rospy`.
+This creates a new package `python_turtle` under `~/python_turtle_trial/ROS/src`, with dependencies of `std_msgs`, `geometry_msgs` and `rospy`.
 
 # Message Types
 Similar to RobotRaconteur service definition, for ROS there're [message types](http://wiki.ros.org/Messages) and [service types](http://wiki.ros.org/Services). In the task we'll need to create our own message and service types.
@@ -21,9 +21,9 @@ string name
 geometry_msgs/Pose turtle_pose
 string color
 ```
-This bascially shows the message contains the name of the turtle, its pose and color. Since this message is part of the `python_turtle` package, create a folder under `python_turtle_trial/ROS/src/python_turtle/` called `msg`. Then create a file named `turtle_msg`, and copy above message definition into this file as your own message type.
+This bascially shows the message contains the name of the turtle, its pose and color. Since this message is part of the `python_turtle` package, create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `msg`. Then create a file named `turtle_msg.msg`, and copy above message definition into this file as your own message type.
 
-In order to let the compiler know and built the message for you, it's necessary to modify the `package.xml` as well as `CMakeLists.txt` under package `python_turtle`. So first open up `package.xml` and uncomment below two lines:
+In order to let the compiler know and build the message for you, it's necessary to modify the `package.xml` as well as `CMakeLists.txt` under package `python_turtle`. So first open up `package.xml` and uncomment below two lines:
 ```
 <build_depend>message_generation</build_depend>
 <exec_depend>message_runtime</exec_depend>
@@ -44,7 +44,8 @@ catkin_package(
 ...
 )
 ```
-Add `CATKIN_DEPENDS message_runtime` within `catkin_package`
+Add `CATKIN_DEPENDS message_runtime` within `catkin_package`.
+
 Then find the following block of code:
 ```
 # add_message_files(
@@ -93,6 +94,7 @@ turtle_obj.color="red"
 
 # Service Types
 A ROS service is similar to a function call, and in the task we'll ask you to create a `setpose` and `setcolor`:
+
 `setpose`:
 ```
 geometry_msgs/PoseStamped turtle_pose
@@ -107,7 +109,7 @@ int8 ret
 ```
 ROS service has to have a return type, so we can simply return an `int` instead of `void`. 
 
-Generating a ROS service type is similar to generating a message type. First create a folder under `python_turtle_trial/ROS/src/python_turtle/` called `srv`. Then create two files named `setpose` and `setcolor`, and copy above service definitions into these files as your own service types.
+Generating a ROS service type is similar to generating a message type. First create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `srv`. Then create two files named `setpose.srv` and `setcolor.srv`, and copy above service definitions into these files as your own service types.
 Some steps are overlapped when creating services and messages, so only a bit differences. Navigate to `CMakeLists.txt` under package `python_turtle`, open it up and look for code below:
 ```
 # add_service_files(
@@ -137,7 +139,7 @@ def set_pose(self,req):
 ```
 Remember to build your workspace and source it to get your service types exposed.
 
-## build workspace
+## Build Workspace
 Type in following commands to build your workspace:
 ```
 cd ~/python_turtle_trial/ROS
@@ -217,12 +219,12 @@ class create_turtle:
 		self.turtle_pose=Pose()
 		self.turtle=turtle_msg()
 		#subscriber initialization
-		self.vel_sub=rospy.Subscriber(<drive topic name>,<message type>,self.drive_callback)
+		self.vel_sub=rospy.Subscriber('<drive topic name>',<message type>,self.drive_callback)
 		#publisher initialization
-		self.pose_pub=rospy.Publisher(<turtle topic name>,<message type>,queue_size=1)
+		self.turtle_pub=rospy.Publisher('<turtle topic name>',<message type>,queue_size=1)
 		#service initialization
-		self.pose_server=rospy.Service(<service name>, <service type>, self.set_pose)
-		self.color_server=rospy.Service(<service name>, <service type>, self.set_color)
+		self.pose_server=rospy.Service('<service name>', <service type>, self.set_pose)
+		self.color_server=rospy.Service('<service name>', <service type>, self.set_color)
 ```
 Note that in the service there're function `drive_callback`, `set_pose` and `set_color`, therefore we'll also need to implement those so when a service is called or a subscriber receives message, the function will be triggered. Inside the same class,
 ```
@@ -240,13 +242,13 @@ Note that in the service there're function `drive_callback`, `set_pose` and `set
 ```
 After having a complete class, it's necessary to initialize a ROS node as well as create the class object:
 ```
-rospy.init_node('turtlebot', anonymous=True)
+rospy.init_node('<random node name>', anonymous=True)
 turtle_obj=create_turtle()
 ```
 Note that the goal for this script is to keep track of the turtle, so we also need to publish the turtle pose continuously.
 ```
 while not rospy.is_shutdown():
-	turtle_obj.pose_pub.publish(turtle_obj.turtle)
+	turtle_obj.turtle_pub.publish(turtle_obj.turtle)
 	time.sleep(0.01)
 ```
 By filling up the `<>` sections above, you should have a complete turtlebot server.
@@ -255,8 +257,8 @@ By filling up the `<>` sections above, you should have a complete turtlebot serv
 Now let's create a simple ROS client for the turtlebot. Create a new file and name it `turtlebot_client.py`. First import the ROS and other essential libraries at top:
 ```
 import rospy     #import ROS library
-import turtle as tt
-from geometry_msgs.msg import TwistStamped
+import turtle
+from geometry_msgs.msg import Twist
 from python_turtle.msg import turtle_msg
 ```
 Similar to the `turtlebot.py`, we need to initialize the screen and a turtle first:
@@ -273,7 +275,7 @@ Then it's necessary to create a variable keeping the turtle pose information fro
 turtle_obj=turtle_msg()
 def callback(data):
 	global turtle_obj
-	turtle_pose=data
+	turtle_obj=data
 ```
 And it's also necessary to have an `update()` function to update display:
 ```
@@ -282,16 +284,16 @@ def update()
 	if turtle_obj.color=="None":
 		t1.penup()
 	else:
-		t1.pencolor(<color>)
+		t1.pencolor('<color>')
 
 	t1.setpos(<x coordinate>,<y coordinate>)
 	t1.seth(<angle>)
 ```
 Finally, we initialize ROS node as well as the publisher and subscriber:
 ```
-rospy.init_node(<random node name>, anonymous=False)
-pub=rospy.Publisher(<drive topic name>,<message type>,queue_size=1)
-sub=rospy.Subscriber(<turtle topic name>,<message type>,callback)
+rospy.init_node('<random node name>', anonymous=False)
+pub=rospy.Publisher('<drive topic name>',<message type>,queue_size=1)
+sub=rospy.Subscriber('<turtle topic name>',<message type>,callback)
 ```
 After ROS is initialized, let's also have the turtle running a circle:
 ```
@@ -305,7 +307,8 @@ while not rospy.is_shutdown():
 All rospy scripts can run with `python` command, but make sure have one and only one `roscore` running.
 
 # Task
-From tutorial above, you should have a complete turtlebot subscriber and a simple turtlebot publisher. Given `keyboard.py` under `python_turtle_trial/Examples`, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
+## 1
+From tutorial above, you should have a complete turtlebot subscriber and a simple turtlebot publisher. Given `keyboard.py` under `~/python_turtle_trial/Examples`, try creating a client that display the turtle as well as reading in inputs from the keyboard to drive the turtle accordingly.
 
-
-Given the camera publisher `ROS/cam_pub.py` and detection example `Examples/detection.py`, try create a client subscribing images from the webcam, process the image and publishing command to drive the turtle based on the color detected in your webcam.
+## 2
+Given the camera publisher `~/python_turtle_trial/ROS/src/webcam/src/cam_pub.py` and detection example `Examples/detection.py`, try create a client subscribing images from the webcam, process the image and publishing command to drive the turtle based on the color detected in your webcam.
