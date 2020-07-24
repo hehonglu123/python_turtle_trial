@@ -2,7 +2,7 @@
 Robot Raconteur is an object oriented Service-Client middleware. An RR service generally runs with a hardware (e.g. sensors,actuators) attached to a robot/computer to have direct communication between them. An RR client can receive messages that are sent from services and can call object functions in the service to command the robot. 
 In this example, we'll go through how RR webcam streaming works.
 # Service Definition
-Each RR service has its own service definition file, which includes properties, functions and others that are exposed to clients. In other word, the definition inside the `.robdef` file are the ones the client has access to. 
+Each RR service has its own service definition file, which includes properties, functions and others that are exposed to clients. In other words, the definition inside the `.robdef` file are the ones the client has access to. 
 ## Webcam Example Service Definition
 Let's take a look at the webcam example service definition below:
 ```
@@ -46,11 +46,11 @@ object turtlesim
 
 end object
 ```
-With provided service definition above, create a file `experimental.turtlebot_create.robdef` under `python_turtle_trial/RR` and copy them into the file as your service definition file. Feel free to modify it. This service definition will give you a sense on what object information to contain in your RR service later.
+With provided service definition above, create a file `experimental.turtlebot_create.robdef` under `~/python_turtle_trial/RR` and copy them into the file as your service definition file. Feel free to modify it later. This service definition will give you a sense on what object information to contain in your RR service later.
 
 # RR Service
 ## Webcam Example Service
-Inside `python_turtle_trial/RR`, there's `webcam_service.py` python script for RR webcam service. This example continuously capturing images from a webcam.
+Inside `~/python_turtle_trial/RR`, there's `webcam_service.py` python script for RR webcam service. This example continuously capturing images from a webcam.
 At very top, the RobotRaconteur library is imported:
 ```
 import RobotRaconteur as RR
@@ -86,7 +86,7 @@ RRN.RegisterService("Webcam","experimental.createwebcam2.Webcam",c1)
 ```
 The service is registered with name "Webcam", type of "experimental.createwebcam2.Webcam", actual object of c1
 
-The `input()` function at last holds the script from exiting. To run this script, simply do `$ python webcam_service.py`.
+The `input()` function at last holds the script from exiting. To run this script, simply run `$ python webcam_service.py`.
 
 
 ## Create Turtlebot Service
@@ -101,7 +101,7 @@ Then create a class `create_turtle`, and fill in according to the service defini
 class create_turtle:
 	def __init__(self):               			#initialization upon creation
 		#RR property
-		self.turtle_pose=RRN.NewStructure("experimental.turtlebot_create.pose")	#create RR structure obj
+		self.turtle_pose=<RR structure of pose>		#create RR structure obj
 		self.color="None"
 	def drive(self,move_speed,turn_speed):            #Drive function, update new position, this is the one referred in definition
 		#assign those values
@@ -134,7 +134,7 @@ By filling in the sections above, an RR turtlebot service is ready to run by `py
 
 # RR Client
 ## Webcam Example Streaming Client
-There's script `streaming_client.py` under `python_turtle_trial/RR`. The RR client library is imported at the top:
+There's script `streaming_client.py` under `~/python_turtle_trial/RR`. The RR client library is imported at the top:
 ```
 from RobotRaconteur.Client import *
 ```
@@ -193,25 +193,25 @@ with RR.ClientNodeSetup(argv=sys.argv):
 ```
 Since we have a `wire` in our service definition, it's better to use the subscriber mode here;
 ```
-sub=RRN.SubscribeService(url)
-while True:	
-	try:								#keep looping if not connecting to a service
-		turtle_obj = sub.GetDefaultClient(url)			#turtle object sent from service
-		turtle_pose_wire=sub.SubscribeWire(<wire name>)		#subscribe to the wire name
-		break
-	except RR.ConnectionException:
-		time.sleep(0.1)
-```
+	sub=RRN.SubscribeService(url)
+	while True:	
+		try:								#keep looping if not connecting to a service
+			turtle_obj = sub.GetDefaultClient(url)			#turtle object sent from service
+			turtle_pose_wire=sub.SubscribeWire(<wire name>)		#subscribe to the wire name
+			break
+		except RR.ConnectionException:
+			time.sleep(0.1)
+	```
 
 A good example would be having the turtle driving a circle:
 ```
-	while True:
-		turtle_obj.drive(10,10)
-		update(turtle_obj, turtle_pose_wire)		#update in display
+while True:
+	turtle_obj.drive(10,10)
+	update(turtle_obj, turtle_pose_wire)		#update in display
 ```
 Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
 # Task
-From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `python_turtle_trial/Examples`, try adapt it into an RR client that can control the turtle through keyboard.
+From the tutorial above, you should have a complete turtlebot service and a simple turtlebot client. Given the example of reading keyboard inputs under `~/python_turtle_trial/Examples`, try adapt it into an RR client that can control the turtle through keyboard.
 
 Given the camera service `RR/webcam_service.py` and detection example `Examples/detection.py`, try create a client reading in images from the webcam service, process the image and drive the turtle based on the color detected in your webcam.
