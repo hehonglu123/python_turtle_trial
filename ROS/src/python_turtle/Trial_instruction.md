@@ -109,7 +109,7 @@ int8 ret
 ```
 ROS service has to have a return type, so we can simply return an `int` instead of `void`. 
 
-Generating a ROS service type is similar to generating a message type. First create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `srv`. Then create two files named `setpose` and `setcolor`, and copy above service definitions into these files as your own service types.
+Generating a ROS service type is similar to generating a message type. First create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `srv`. Then create two files named `setpose.srv` and `setcolor.srv`, and copy above service definitions into these files as your own service types.
 Some steps are overlapped when creating services and messages, so only a bit differences. Navigate to `CMakeLists.txt` under package `python_turtle`, open it up and look for code below:
 ```
 # add_service_files(
