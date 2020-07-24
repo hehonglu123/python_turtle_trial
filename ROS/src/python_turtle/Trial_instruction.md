@@ -221,7 +221,7 @@ class create_turtle:
 		#subscriber initialization
 		self.vel_sub=rospy.Subscriber(<drive topic name>,<message type>,self.drive_callback)
 		#publisher initialization
-		self.pose_pub=rospy.Publisher(<turtle topic name>,<message type>,queue_size=1)
+		self.turtle_pub=rospy.Publisher(<turtle topic name>,<message type>,queue_size=1)
 		#service initialization
 		self.pose_server=rospy.Service(<service name>, <service type>, self.set_pose)
 		self.color_server=rospy.Service(<service name>, <service type>, self.set_color)
@@ -248,7 +248,7 @@ turtle_obj=create_turtle()
 Note that the goal for this script is to keep track of the turtle, so we also need to publish the turtle pose continuously.
 ```
 while not rospy.is_shutdown():
-	turtle_obj.pose_pub.publish(turtle_obj.turtle)
+	turtle_obj.turtle_pub.publish(turtle_obj.turtle)
 	time.sleep(0.01)
 ```
 By filling up the `<>` sections above, you should have a complete turtlebot server.
