@@ -21,7 +21,7 @@ string name
 geometry_msgs/Pose turtle_pose
 string color
 ```
-This bascially shows the message contains the name of the turtle, its pose and color. Since this message is part of the `python_turtle` package, create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `msg`. Then create a file named `turtle_msg`, and copy above message definition into this file as your own message type.
+This bascially shows the message contains the name of the turtle, its pose and color. Since this message is part of the `python_turtle` package, create a folder under `~/python_turtle_trial/ROS/src/python_turtle/` called `msg`. Then create a file named `turtle_msg.msg`, and copy above message definition into this file as your own message type.
 
 In order to let the compiler know and build the message for you, it's necessary to modify the `package.xml` as well as `CMakeLists.txt` under package `python_turtle`. So first open up `package.xml` and uncomment below two lines:
 ```
