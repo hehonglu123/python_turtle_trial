@@ -4,7 +4,7 @@ In this example, we'll go through how RR webcam streaming works.
 # Service Definition
 Each RR service has its own service definition file, which includes properties, functions and others that are exposed to clients. In other words, the definition inside the `.robdef` file are the ones the client has access to. 
 ## Webcam Example Service Definition
-Let's take a look at the webcam example service definition below:
+Let's take a look at the webcam example service definition `~/python_turtle_trial/RR/robdef/experimental.createwebcam2.robdef` below:
 ```
 service experimental.createwebcam2
 
@@ -46,7 +46,7 @@ object turtlesim
 
 end object
 ```
-With provided service definition above, create a file `experimental.turtlebot_create.robdef` under `~/python_turtle_trial/RR` and copy them into the file as your service definition file. Feel free to modify it later. This service definition will give you a sense on what object information to contain in your RR service later.
+With provided service definition above, create a file `experimental.turtlebot_create.robdef` under `~/python_turtle_trial/RR/robdef` and copy them into the file as your service definition file. Feel free to modify it later. This service definition will give you a sense on what object information to contain in your RR service later.
 
 # RR Service
 ## Webcam Example Service
@@ -77,7 +77,7 @@ with RR.ServerNodeSetup("Webcam_Service",2355) as node_setup:
 In this case, the node name is "Webcam_Service" and the port is 2355.
 The service definition file is registered right after that:
 ```
-RRN.RegisterServiceTypeFromFile("experimental.createwebcam2")
+RRN.RegisterServiceTypeFromFile("robdef/experimental.createwebcam2")
 ```
 Then the object is created and the service is registered:
 ```
@@ -119,7 +119,7 @@ After creating the class object, it's necessary to intialize an RR node as well 
 ```
 with RR.ServerNodeSetup(<service definition name>, <port number>):      #setup RR node with service name and port
 	#Register the service type
-	RRN.RegisterServiceTypeFromFile(<service definition name>)               #register service type
+	RRN.RegisterServiceTypeFromFile(<service definition file>)               #register service type
 
 	create_inst=<create class object>                #create object
 
