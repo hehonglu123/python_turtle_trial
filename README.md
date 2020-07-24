@@ -1,7 +1,7 @@
 # ROS and RobotRaconteur python turtle module example
 
 ## Prerequisite:
-* Ubuntu 18.04
+* Ubuntu 18.04 ([Native](https://www.linuxtechi.com/ubuntu-18-04-lts-desktop-installation-guide-screenshots/) or [Virtual](https://www.toptechskills.com/linux-tutorials-courses/how-to-install-ubuntu-1804-bionic-virtualbox/)
 * python2
 * git (`sudo apt-get install git`)
 * [RobotRaconteur](https://github.com/robotraconteur/robotraconteur/wiki/Download)
