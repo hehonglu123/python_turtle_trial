@@ -139,7 +139,7 @@ def set_pose(self,req):
 ```
 Remember to build your workspace and source it to get your service types exposed.
 
-## build workspace
+## Build Workspace
 Type in following commands to build your workspace:
 ```
 cd ~/python_turtle_trial/ROS
