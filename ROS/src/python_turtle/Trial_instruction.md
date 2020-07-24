@@ -275,7 +275,7 @@ Then it's necessary to create a variable keeping the turtle pose information fro
 turtle_obj=turtle_msg()
 def callback(data):
 	global turtle_obj
-	turtle_pose=data
+	turtle_obj=data
 ```
 And it's also necessary to have an `update()` function to update display:
 ```
