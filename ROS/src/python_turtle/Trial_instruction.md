@@ -161,7 +161,7 @@ from cv_bridge import CvBridge, CvBridgeError
 The `Webcam_impl()` class is a webcam class, which contains camera metadata and a `CaptureFrame()` function. Then take a look at `main`:
 ```
 pub = rospy.Publisher('image_raw', Image, queue_size=0) 
-rospy.init_node('picam', anonymous=True) 
+rospy.init_node('webcam', anonymous=True) 
 ```
 Here ROS node is initialized with a publisher, published to topic `image_raw` of type `Image` ([sensor_msgs/Image.msg](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 ```
@@ -169,7 +169,7 @@ while not rospy.is_shutdown():
 ```
 This while loop holds the sciprt from exiting until ROS is shutdown, and inside the loop:
 ```
-frame=picam.CaptureFrame() 
+frame=webcam.CaptureFrame() 
 pub.publish(bridge.cv2_to_imgmsg(frame, "bgr8")) 
 ```
 The image is captured and convert to ROS Image type, and finally published to the topic by the publisher.
