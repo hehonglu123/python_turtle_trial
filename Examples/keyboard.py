@@ -1,52 +1,46 @@
-class _Getch:
-    """Gets a single character from standard input.  Does not echo to the
-screen."""
-    def __init__(self):
-        try:
-            self.impl = _GetchWindows()
-        except ImportError:
-            self.impl = _GetchUnix()
-
-    def __call__(self): return self.impl()
+import termios, fcntl, sys, os
+#TODO: import RR/ROS libraries and ROS message/service type 
 
 
-class _GetchUnix:
-    def __init__(self):
-        import tty, sys
+#keyboard reading settings
+fd = sys.stdin.fileno()
+oldterm = termios.tcgetattr(fd)
+newattr = termios.tcgetattr(fd)
+newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+termios.tcsetattr(fd, termios.TCSANOW, newattr)
+oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+#TODO: Initialize ROS/RR node
+#ROS: create publisher to publish Twist message to corresponding topic name
 
-
-class _GetchWindows:
-    def __init__(self):
-        import msvcrt
-
-    def __call__(self):
-        import msvcrt
-        return msvcrt.getch()
+#RR: connect to service with url
 
 print("Running")
 print("Press Arrow Key to Control Turtle")
 print("Press q to quit")
-getch = _Getch()
-while True:
-    c=getch()
-    if "A" in c:
-        print("drive forward")          ####Drive forward
-    if "B" in c:
-        print("drive backward")         ####Drive backward               
-    if "C" in c:
-        print("drive right")            ####Drive right
-    if "D" in c:
-        print("drive left")             ####Drive left
-    if 'q' in c:
-        break
+try:
+    #TODO: hold the script running with ROS/RR way
+    while True:
+        try:
+            #read input and print "command"
+            c = sys.stdin.read()
+            #TODO: ROS create message type variable, publish command
+            #TODO: RR call drive function
+            if "\x1b[A" in c:
+                print("drive forward")          ####Drive forward
+            if "\x1b[B" in c:
+                print("drive backward")         ####Drive backward               
+            if "\x1b[C" in c:
+                print("drive right")            ####Drive right
+            if "\x1b[D" in c:
+                print("drive left")             ####Drive left
+            if "q" in c:
+                break
+
+        except IOError: pass
+        except TypeError: pass
+#finish reading keyboard input
+finally:
+    termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+    fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
