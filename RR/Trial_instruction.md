@@ -205,9 +205,9 @@ Since we have a `wire` in our service definition, it's better to use the subscri
 
 A good example would be having the turtle driving a circle:
 ```
-while True:
-	turtle_obj.drive(10,10)
-	update(turtle_obj, turtle_pose_wire)		#update in display
+	while True:
+		turtle_obj.drive(10,10)
+		update(turtle_obj, turtle_pose_wire)		#update in display
 ```
 Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
