@@ -34,19 +34,3 @@ class _GetchWindows:
         import msvcrt
         return msvcrt.getch()
 
-print("Running")
-print("Press Arrow Key to Control Turtle")
-print("Press q to quit")
-getch = _Getch()
-while True:
-    c=getch()
-    if "A" in c:
-        print("drive forward")          ####Drive forward
-    if "B" in c:
-        print("drive backward")         ####Drive backward               
-    if "C" in c:
-        print("drive right")            ####Drive right
-    if "D" in c:
-        print("drive left")             ####Drive left
-    if 'q' in c:
-        break
