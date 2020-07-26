@@ -10,23 +10,21 @@ def WebcamImageToMat(image):
     return frame2
 
 #Main program
-def main():
 
-    url='rr+tcp://raspberrypi:2355/?service=Webcam'
-    #take url from command line
-    if (len(sys.argv)>=2):
-        url=sys.argv[1]
+url='rr+tcp://raspberrypi:2355/?service=Webcam'
+#take url from command line
+if (len(sys.argv)>=2):
+    url=sys.argv[1]
 
-    #connect to service given url, returned with an RR object, defined with service definition    
-    cam=RRN.ConnectService(url)
+#connect to service given url, returned with an RR object, defined with service definition    
+cam=RRN.ConnectService(url)
 
-    while True:
-        if (not cam.image is None):
-            cv2.imshow("Image",WebcamImageToMat(cam.image))
-        
-        if cv2.waitKey(50)==-1:
-            break
-    cv2.destroyAllWindows()
+while True:
+    if (not cam.image is None):
+        cv2.imshow("Image",WebcamImageToMat(cam.image))
+    
+    if cv2.waitKey(50)==-1:
+        break
+cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    main()
+
