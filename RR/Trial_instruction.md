@@ -185,29 +185,28 @@ def update(turtle_obj,turtle_pose_wire):                    	#Update the display
 ```
 Then comes the RR part, we intialize the RR client node:
 ```
-with RR.ClientNodeSetup(argv=sys.argv):
-	url='rr+tcp://localhost:<port number>/?service=<service name>'
-	#take url from command line
-	if (len(sys.argv)>=2):
-		url=sys.argv[1]
+url='rr+tcp://localhost:<port number>/?service=<service name>'
+#take url from command line
+if (len(sys.argv)>=2):
+	url=sys.argv[1]
 ```
 Since we have a `wire` in our service definition, it's better to use the subscriber mode here;
 ```
-	sub=RRN.SubscribeService(url)
-	while True:	
-		try:								#keep looping if not connecting to a service
-			turtle_obj = sub.GetDefaultClient(url)			#turtle object sent from service
-			turtle_pose_wire=sub.SubscribeWire(<wire name>)		#subscribe to the wire name
-			break
-		except RR.ConnectionException:
-			time.sleep(0.1)
+sub=RRN.SubscribeService(url)
+while True:	
+	try:								#keep looping if not connecting to a service
+		turtle_obj = sub.GetDefaultClient(url)			#turtle object sent from service
+		turtle_pose_wire=sub.SubscribeWire(<wire name>)		#subscribe to the wire name
+		break
+	except RR.ConnectionException:
+		time.sleep(0.1)
 ```
 
 A good example would be having the turtle driving a circle:
 ```
-	while True:
-		turtle_obj.drive(10,10)
-		update(turtle_obj, turtle_pose_wire)		#update in display
+while True:
+	turtle_obj.drive(10,10)
+	update(turtle_obj, turtle_pose_wire)		#update in display
 ```
 Make sure the service has already started, and then run this client by `python turtlebot_client.py`
 
