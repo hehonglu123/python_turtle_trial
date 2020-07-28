@@ -2,8 +2,8 @@
 
 ## Prerequisite:
 * Ubuntu 18.04 ([Native](https://www.linuxtechi.com/ubuntu-18-04-lts-desktop-installation-guide-screenshots/) or [Virtual](https://www.toptechskills.com/linux-tutorials-courses/how-to-install-ubuntu-1804-bionic-virtualbox/))
-* python2
-* OpenCV (`sudo apt-get install python-opencv`)
+* python2/python3
+* OpenCV (`pip/pip3 install opencv-python`)
 * git (`sudo apt-get install git`)
 * [RobotRaconteur](https://github.com/robotraconteur/robotraconteur/wiki/Download)
 * [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
