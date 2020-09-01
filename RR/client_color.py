@@ -21,14 +21,10 @@ if (len(sys.argv)>=2):
 turtle_sub=RRN.SubscribeService(url1)
 cam_sub=RRN.SubscribeService(url2)
 
-while True:
-    try:
-        turtle_obj = turtle_sub.GetDefaultClient()
-        cam_obj=cam_sub.GetDefaultClient()
-        turtle_pose_wire=turtle_sub.SubscribeWire("turtle_pose_wire")
-        break
-    except RR.ConnectionException:
-        time.sleep(0.1)
+#get default client
+turtle_obj = turtle_sub.GetDefaultClientWait(5)
+cam_obj=cam_sub.GetDefaultClientWait(5)
+turtle_pose_wire=turtle_sub.SubscribeWire("turtle_pose_wire")
 
 
 #add my turtle to the turtle list
@@ -70,6 +66,7 @@ while True:
             if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
                 print("red detected")
                 turtle_obj.drive(10,0)            ####Drive forward
+                turtle_obj.color="red"            #set color to red
     
         # 2) filter on GREEN component
         image_green = cv2.inRange(image, np.array([5,200,5]),np.array([200,255,200]))
@@ -80,6 +77,7 @@ while True:
             if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
                 print("green detected")
                 turtle_obj.drive(0,-10)            ####Drive forward
+                turtle_obj.color="green"           #set color to green
     
         # 3) filter on BLUE component
         image_blue = cv2.inRange(image, np.array([200,5,5]),np.array([255,200,200]))
@@ -90,6 +88,8 @@ while True:
             if np.linalg.norm(centroids[i]-image_dimension/2.)<50:  #threshold again, only for ones near the center
                 print("blue detected")
                 turtle_obj.drive(0,10)            ####Drive forward    
+                turtle_obj.color="blue"           #set color to blue
+    
 
         
 

@@ -1,5 +1,4 @@
-import RobotRaconteur as RR
-RRN=RR.RobotRaconteurNode.s
+from RobotRaconteur.Client import *     #import RR client library
 import cv2
 import sys
 
@@ -11,19 +10,24 @@ def WebcamImageToMat(image):
 
 #Main program
 
-url='rr+tcp://raspberrypi:2355/?service=Webcam'
+url='rr+tcp://localhost:2355/?service=Webcam'
 #take url from command line
 if (len(sys.argv)>=2):
     url=sys.argv[1]
 
 #connect to service given url, returned with an RR object, defined with service definition    
-cam=RRN.ConnectService(url)
+
+cam_sub=RRN.SubscribeService(url)
+cam_obj=cam_sub.GetDefaultClientWait(5)
+
+
+
 
 while True:
-    if (not cam.image is None):
-        cv2.imshow("Image",WebcamImageToMat(cam.image))
+    if (not cam_obj.image is None):
+        cv2.imshow("Image",WebcamImageToMat(cam_obj.image))
     
-    if cv2.waitKey(50)==-1:
+    if cv2.waitKey(50)!=-1:
         break
 cv2.destroyAllWindows()
 
